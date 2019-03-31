@@ -57,18 +57,26 @@ def parse_hist_data(json_file, out_file, c_threshold, no_activity):
         logger.info('Starting to go through location data...')
         for location in json_data['locations']:
             if 'activity' in location:
-                loc_time = dt.fromtimestamp(float(location['timestampMs'])/1000).strftime('%c')
+                loc_time = dt.fromtimestamp(
+                            float(location['timestampMs'])/1000).strftime('%c')
                 loc_lat = location['latitudeE7'] / 1e7
                 loc_lon = location['longitudeE7'] / 1e7
                 for activity in location['activity']:
                     activity_time = dt.fromtimestamp(float(activity['timestampMs'])/1000).strftime('%c')
-                    activity_sorted = sorted(activity['activity'], key=lambda x: x['confidence'], reverse=True)
-                    # todo: add support to collect multiple activities based on confidence filter
+                    activity_sorted = sorted(activity['activity'],
+                                             key=lambda x: x['confidence'],
+                                             reverse=True)
+                    # todo: add support to collect multiple activities
+                    # based on confidence filter
                     activity_type = activity_sorted[0]['type']
                     activity_confidence = activity_sorted[0]['confidence']
-                    #print('Lat:{}, Lon:{}, Activity:{}, Confidence:{}, Date:{}'.format(loc_lat, loc_lon, activity_type,
-                    #                                                                   activity_confidence, activity_time)) 
-                    csv_write.writerow((loc_lat, loc_lon, activity_type, activity_confidence, activity_time))
+                    #print('Lat:{}, Lon:{}, Activity:{}, 
+                    #       Confidence:{}, Date:{}'.format(loc_lat, loc_lon, 
+                    #                                      activity_type,
+                    #                                      activity_confidence,
+                    #                                      activity_time)) 
+                    csv_write.writerow((loc_lat, loc_lon, activity_type, 
+                                        activity_confidence, activity_time))
             else:
                 if no_activity:
                     loc_time = dt.fromtimestamp(float(location['timestampMs'])/1000).strftime('%c')
@@ -76,8 +84,12 @@ def parse_hist_data(json_file, out_file, c_threshold, no_activity):
                     loc_lon = location['longitudeE7'] / 1e7
                     activity_type = 'none'
                     activity_confidence = 0
-                    #print('Lat:{}, Lon:{}, Activity:{}, Confidence:{}, Date:{}'.format(loc_lat, loc_lon, activity_type, '0', loc_time))
-                    csv_write.writerow((loc_lat, loc_lon, activity_type, activity_confidence, loc_time))
+                    #print('Lat:{}, Lon:{}, Activity:{}, 
+                    #       Confidence:{}, Date:{}'.format(loc_lat, loc_lon,
+                    #                                      activity_type, '0',
+                    #                                      loc_time))
+                    csv_write.writerow((loc_lat, loc_lon, activity_type,
+                                        activity_confidence, loc_time))
         logger.info('Finished processing location data...')
 
 
@@ -110,7 +122,9 @@ if __name__ == '__main__':
         msg = 'Collecting all locations, including those without an activity!'
 
     logger.info(msg)
-    logger.info('Starting to parse json data from file: {}'.format(results.json_file))
+    logger.info(
+        'Starting to parse json data from file: {}'.format(results.json_file))
 
-    parse_hist_data(results.json_file, results.out_file, results.c_threshold, results.no_activity)
+    parse_hist_data(results.json_file, results.out_file, 
+                    results.c_threshold, results.no_activity)
 
