@@ -1,4 +1,5 @@
 import os
+import sys
 import csv
 import json
 import logging
@@ -92,7 +93,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-o', '--output', type=str, action='store', 
                         dest='out_file', required=True, 
-                        help='the path to the json file')
+                        help='the path to the output file')
 
     parser.add_argument('-c', '--confidence', type=int, action='store', 
                         dest='c_threshold', default=100, 
